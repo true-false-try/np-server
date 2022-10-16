@@ -10,11 +10,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
 @Slf4j
 @Service
-public class ServerServiceImpl extends TemplateRepository implements ServerService {
+public class ServerServiceImpl implements ServerService {
     private final RestTemplate restTemplate;
     private final Document document;
     @Autowired
@@ -25,18 +23,17 @@ public class ServerServiceImpl extends TemplateRepository implements ServerServi
 
     @Override
     public void save(Document document) {
-        documents.add(document);
+        TemplateRepository.documents.add(document);
     }
 
     @Override
     public String getData() {
-        return documents.toString();
+        return TemplateRepository.documents.toString();
     }
 
     @Override
     public void run() {
         try {
-            log.info(String.format("[%s]: Start ", ServerServiceImpl.class.getName()));
             Thread.sleep(60000);
             restTemplate.postForObject(document.getCallbackUrl(),
                     Document.builder()
@@ -48,7 +45,7 @@ public class ServerServiceImpl extends TemplateRepository implements ServerServi
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }
-        log.info(String.format("[%s]: Finished", ServerServiceImpl.class.getName()));
+        log.info("Finished");
     }
 
 }

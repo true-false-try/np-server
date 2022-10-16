@@ -21,13 +21,15 @@ public class ServerController {
     private final RestTemplate restTemplate;
 
     @PostMapping("document/create")
-    public ResponseEntity<String> getCreateDocument(@RequestBody Document document) {
-        log.info(String.format("[%s]: start method getCreateDocumentServer()", ServerController.class.getName()));
+    public ResponseEntity<String> createDocument(@RequestBody Document document) {
         new Thread(new ServerServiceImpl(document, restTemplate)).start();
+        log.info("Document created");
         service.save(document);
-        log.info("HTTP Response Code ".concat(HttpStatus.ACCEPTED.toString()));
-        return ResponseEntity.accepted().build();
+        log.info("Document saved");
+        log.info(service.getData());
         // If you want to watch all have saved document you should use service.getData();
+        return ResponseEntity.accepted().build();
+
 
     }
 
